@@ -7,12 +7,16 @@
 1. Update dependencies.
 
 ```sh
-npm install --save --save-exact @eslint/js@9.0.0-beta.0 @types/eslint__js eslint@9.0.0-beta.0 globals typescript-eslint
-
 npm uninstall --save @typescript-eslint/eslint-plugin @typescript-eslint/parser
+
+npm install --save --save-exact @eslint/js@9.0.0-beta.1 @types/eslint__js eslint@9.0.0-beta.1 globals
+
+# Note: The following package as of v7.0.2 does not currently support ESLint v9, so just skip installation for now.
+# https://github.com/typescript-eslint/typescript-eslint/blob/main/package.json
+npm install --save --save-exact typescript-eslint
 ```
 
-2. Consolidate `build` scripts.
+2. Update `build` scripts.
 
 ```json
 "build:cjs": "DELETE",
@@ -21,10 +25,13 @@ npm uninstall --save @typescript-eslint/eslint-plugin @typescript-eslint/parser
 "postbuild": "DELETE",
 ```
 
-3. Update `lint` script.
+3. Update `lint` scripts.
 
 ```json
-"lint": "eslint --config ./lib/eslint.config.js"
+"// lint": "Scripts for linting the codebase.",
+"lint": "DELETE",
+"lint:check": "eslint ./",
+"lint:fix": "eslint --fix ./",
 ```
 
 4. Remove `eslintConfig` key.
@@ -32,6 +39,12 @@ npm uninstall --save @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```json
 "// config": "Configuration for Prettier.",
 "prettier": "./lib/prettier.config.js"
+```
+
+## Create root `eslint.config.js` file
+
+```js
+export {default} from "./lib/eslint.config.js";
 ```
 
 ## Changes to `tsconfig` files
@@ -47,20 +60,18 @@ npm uninstall --save @typescript-eslint/eslint-plugin @typescript-eslint/parser
 
 2. Delete the `tsconfig.cjs.json` and `tsconfig.esm.json` files.
 
-## Update `.vscode/settings.json` file
+## Update `lint-staged.config.ts` file
 
-```json
-"eslint.options": {
-	"overrideConfigFile": "./lib/eslint.config.js"
-}
+```ts
+`eslint --fix ${relativePaths.join(" ")}`;
 ```
 
-## Delete the `postbuild` files
+## Delete `postbuild` files
 
 1. `src/__tests__/postbuild.test.js`
 1. `src/postbuild.js`
 
-## Modify the `eslint.config.ts` file
+## Update `eslint.config.ts` file
 
 ```ts
 import js from "@eslint/js";
