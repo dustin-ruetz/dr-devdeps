@@ -1,12 +1,12 @@
 {
-	// Specify that the Git hook files are shell scripts because VS Code misidentifies some of them as Markdown due to code comments.
+	// Specify that the Git hook files are shell scripts because VS Code misidentifies them as either Markdown, plain text or YAML.
 	"files.associations": {
-		// ~/.githooks/
+		// .githooks/
 		"commit-msg": "shellscript",
 		"pre-commit": "shellscript",
 		"pre-push": "shellscript"
 	},
-	// Configure the icons for the following files that aren't assigned a custom icon automatically.
+	// Configure the icons for the following files that aren't automatically assigned a custom icon.
 	// Excerpt from https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme:
 	// > You can customize the icon associations directly in the user settings.
 	// > With the `*.[extension]` pattern you can define custom file icon associations.
@@ -14,5 +14,8 @@
 	"material-icon-theme.files.associations": {
 		"src/eslint.config.ts": "eslint",
 		"src/prettier.config.ts": "prettier"
-	}
+	},
+	// https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+	"prettier.configPath": "lib/prettier.config.js",
+	"prettier.ignorePath": ".gitignore"
 }

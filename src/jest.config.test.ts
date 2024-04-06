@@ -1,19 +1,8 @@
-import {dependsOn} from "../utils/dependsOn.js";
-import {getRepoMetadata} from "../utils/getRepoMetadata.js";
-import {makeJestConfig} from "../jest.config.js";
+import {dependsOnMock} from "./utils/dependsOn.mock.js";
+import {getRepoMetadata} from "./utils/getRepoMetadata.js";
+import {makeJestConfig} from "./jest.config.js";
 
-jest.mock("../utils/dependsOn.js", () => ({
-	dependsOn: jest.fn(),
-}));
-/**
- * Usage: Call `mockDependsOn.mockResolvedValue(false|true)` based on the array of dependencies that are passed in to
- * the function to determine the value of the `testEnvironment` variable in the jest.config.ts file. For example:
- * - Resolve to `true` to simulate `testEnvironment` as `jsdom` because frontend dependencies *are* installed.
- * - Resolve to `false` to simulate `testEnvironment` as `node` because frontend dependencies *are not* installed.
- * */
-const mockDependsOn = dependsOn as jest.MockedFunction<typeof dependsOn>;
-
-jest.mock("../utils/getRepoMetadata.js", () => ({
+jest.mock("./utils/getRepoMetadata.js", () => ({
 	// Initialize the mock to return an empty object to prevent the following error from being thrown in the test run:
 	// > TypeError: Cannot destructure property 'absoluteRootDir' of 'getRepoMetadata(...)' as it is undefined.
 	getRepoMetadata: jest.fn(() => ({})),
@@ -37,7 +26,7 @@ afterEach(() => {
 describe("the most important configuration options are correct", () => {
 	test("for the parts of the config that *are not* affected by conditional logic", async () => {
 		const hasFrontendDependencies = false;
-		mockDependsOn.mockResolvedValue(hasFrontendDependencies);
+		dependsOnMock.mockResolvedValue(hasFrontendDependencies);
 		mockGetRepoMetadata.mockReturnValue({
 			absoluteRootDir: "/Users/username/repos/dr-devdeps",
 			dependencyPartialPath: actualGetRepoMetadata().dependencyPartialPath,
@@ -46,7 +35,7 @@ describe("the most important configuration options are correct", () => {
 
 		const jestConfig = await makeJestConfig();
 
-		expect(mockDependsOn).toHaveBeenCalledWith(["pug", "react"]);
+		expect(dependsOnMock).toHaveBeenCalledWith(["pug", "react"]);
 		expect(typeof jestConfig).toEqual("object");
 		expect(jestConfig.coverageProvider).toEqual("v8");
 		expect(jestConfig.transform?.[".(js|jsx|ts|tsx)"]).toEqual("@swc/jest");
@@ -55,7 +44,7 @@ describe("the most important configuration options are correct", () => {
 
 	test("when testing this dr-devdeps repo (which *does not* have frontend dependencies)", async () => {
 		const hasFrontendDependencies = false;
-		mockDependsOn.mockResolvedValue(hasFrontendDependencies);
+		dependsOnMock.mockResolvedValue(hasFrontendDependencies);
 		mockGetRepoMetadata.mockReturnValue({
 			absoluteRootDir: "/Users/username/repos/dr-devdeps",
 			dependencyPartialPath: actualGetRepoMetadata().dependencyPartialPath,
@@ -68,14 +57,14 @@ describe("the most important configuration options are correct", () => {
 		expect(jestConfig.testEnvironment).toEqual("node");
 		// Sample the transform config object to verify that the paths to the transformer files are correct.
 		expect(jestConfig.transform?.[".svg"]).toEqual(
-			"<rootDir>/lib/jestTransformerSVGFile.js",
+			"<rootDir>/lib/jest-transformers/svgFile.js",
 		);
 	});
 
 	test("when testing a repo that has installed the dr-devdeps package (repo *does* have frontend dependencies)", async () => {
 		const hasFrontendDependencies = true;
-		mockDependsOn.mockResolvedValue(hasFrontendDependencies);
-		mockDependsOn.mockResolvedValue(true);
+		dependsOnMock.mockResolvedValue(hasFrontendDependencies);
+		dependsOnMock.mockResolvedValue(true);
 		mockGetRepoMetadata.mockReturnValue({
 			absoluteRootDir: "/Users/username/repos/consuming-repo",
 			dependencyPartialPath: actualGetRepoMetadata().dependencyPartialPath,
@@ -88,7 +77,7 @@ describe("the most important configuration options are correct", () => {
 		expect(jestConfig.testEnvironment).toEqual("jsdom");
 		// Sample the transform config object to verify that the paths to the transformer files are correct.
 		expect(jestConfig.transform?.[".svg"]).toEqual(
-			"<rootDir>/node_modules/dr-devdeps/lib/jestTransformerSVGFile.js",
+			"<rootDir>/node_modules/dr-devdeps/lib/jest-transformers/svgFile.js",
 		);
 	});
 });

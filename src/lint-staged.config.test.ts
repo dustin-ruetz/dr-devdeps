@@ -1,5 +1,5 @@
-import {type Config} from "lint-staged";
-import lintstagedConfig from "../lint-staged.config.js";
+import type {Config} from "lint-staged";
+import lintstagedConfig from "./lint-staged.config.js";
 
 test("it exports a configuration object", () => {
 	expect(typeof lintstagedConfig).toEqual("object");
@@ -28,12 +28,11 @@ describe("it runs the correct commands for", () => {
 	});
 
 	describe("unit testing when the TEST_RUNNER environment variable is set to", () => {
-		/* eslint-disable dot-notation */
 		test("jest", () => {
 			process.env["TEST_RUNNER"] = "jest";
 			// @ts-expect-error TODO: See above comment.
 			expect(lintstagedConfig["*.{js,jsx,json,ts,tsx}"](relativePaths)).toEqual(
-				`npm run jest:coverage -- --findRelatedTests --collectCoverageFrom= ${relativePath}`,
+				`npm run test:coverage -- --findRelatedTests --collectCoverageFrom= ${relativePath}`,
 			);
 		});
 
@@ -44,6 +43,5 @@ describe("it runs the correct commands for", () => {
 				`npm run vitest -- related --run ${relativePath} --coverage.enabled --coverage.include=${relativePath}`,
 			);
 		});
-		/* eslint-enable dot-notation */
 	});
 });

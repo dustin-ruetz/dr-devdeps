@@ -1,5 +1,5 @@
 import {fileURLToPath} from "node:url";
-import {getRepoMetadata} from "../getRepoMetadata.js";
+import {getRepoMetadata} from "./getRepoMetadata.js";
 
 jest.mock("node:url", () => ({
 	fileURLToPath: jest.fn(),

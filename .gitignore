@@ -1,3 +1,5 @@
+# Related file: .vscode/settings.json
+
 # Use this .gitignore file as the `--ignore-path` for ESLint and Prettier as well,
 # since everything that's excluded from repo source control shouldn't be checked.
 coverage/

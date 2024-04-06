@@ -1,7 +1,3 @@
-# Refer to the corresponding file in the dotfiles repo for details on these config choices.
-# - Local: ~/.gitattributes
-# - Remote: https://github.com/dustin-ruetz/dotfiles/blob/main/.gitattributes
-
 * text=auto
 
 *.js   text

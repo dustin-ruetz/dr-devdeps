@@ -1,7 +1,3 @@
-// JSON files can be imported using the `tsconfig.compilerOptions.resolveJsonModule` setting.
-// Excerpt from https://www.typescriptlang.org/tsconfig#resolveJsonModule:
-// > Allows importing modules with a `.json` extension, which is a common practice in Node projects.
-// > This includes generating a type for the `import` based on the static JSON shape.
 import packageJson from "../package.json";
 
 test("the most important configuration options are correct", () => {

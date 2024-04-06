@@ -28,8 +28,13 @@ export const getRepoMetadata = () => {
 	// filename being `getRepoMetadata`), so throw an early error if these don't align.
 	if (!absolutePath.includes(partialPath)) {
 		throw new ValidationError(
-			`partialPath string (value = ${partialPath}) is not present within absolutePath string (value = ${absolutePath}).`,
-			{cause: {code: "ERR_PATH_MISMATCH"}},
+			"`partialPath` string is not present within `absolutePath` string.",
+			{
+				cause: {
+					code: "ERR_PATH_MISMATCH",
+					values: {absolutePath, partialPath},
+				},
+			},
 		);
 	}
 	/** `dependencyPartialPath` is known and stable; it's the location where the `dr-devdeps` package is installed as a dependency. */

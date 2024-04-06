@@ -1,4 +1,4 @@
-import {type UserConfig} from "@commitlint/types";
+import type {UserConfig} from "@commitlint/types";
 
 /** https://commitlint.js.org/#/reference-configuration */
 const commitlintConfig: UserConfig = {

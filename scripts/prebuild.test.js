@@ -1,5 +1,5 @@
 import {rm} from "node:fs/promises";
-import {prebuild} from "../prebuild.js";
+import {prebuild} from "./prebuild.js";
 
 jest.mock("node:fs/promises");
 

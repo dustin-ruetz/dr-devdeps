@@ -1,6 +1,6 @@
 import {readFile} from "node:fs/promises";
-import {dependsOn} from "../dependsOn.js";
-import {getRepoMetadata} from "../getRepoMetadata.js";
+import {dependsOn} from "./dependsOn.js";
+import {getRepoMetadata} from "./getRepoMetadata.js";
 
 jest.mock("node:fs/promises", () => ({
 	readFile: jest.fn(),
@@ -9,7 +9,7 @@ jest.mock("node:fs/promises", () => ({
 // > Typecast the imported mocked module into a mocked function with writeable properties.
 const mockReadFile = readFile as jest.MockedFunction<typeof readFile>;
 
-jest.mock("../getRepoMetadata.js", () => ({
+jest.mock("./getRepoMetadata.js", () => ({
 	getRepoMetadata: jest.fn(() => ({
 		absoluteRootDir: "/Users/username/repos/dr-devdeps",
 		dependencyPartialPath: "node_modules/dr-devdeps",
@@ -40,7 +40,7 @@ test("throws errors if the `deps` argument is invalid", () => {
 	expect(async () => {
 		// @ts-expect-error if `deps` argument is an array containing non-string values.
 		await dependsOn(["package1", 2, "package3"]);
-	}).rejects.toThrow(/ERR_DEP_TYPE_NOT_STRING/);
+	}).rejects.toThrow(/ERR_TYPEOF_DEP_NOT_STRING/);
 });
 
 test("returns `false` if the repo does not depend on the package", async () => {

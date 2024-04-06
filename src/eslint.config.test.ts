@@ -1,11 +1,10 @@
-import {eslintConfig} from "../eslint.config.js";
+import {eslintConfig} from "./eslint.config.js";
 
 test("it exports a configuration object", () => {
 	expect(typeof eslintConfig).toEqual("object");
 });
 
 test("the most important configuration options are correct", () => {
-	// Continue with the assertions now that the config object's structure has been verified.
 	expect(eslintConfig.env).toStrictEqual({
 		browser: true,
 		es2024: true,
@@ -21,11 +20,10 @@ test("the most important configuration options are correct", () => {
 	expect(eslintConfig.parserOptions?.sourceType).toEqual("module");
 	expect(eslintConfig.plugins).toStrictEqual(["@typescript-eslint"]);
 	expect(eslintConfig.root).toBe(true);
-	// Disable the following ESLint error since trying to use the `eslintConfig.rules.camelcase` syntax
-	// violates TypeScript's `noPropertyAccessFromIndexSignature` setting when typechecking.
-	//
-	// eslint-disable-next-line dot-notation
 	expect(eslintConfig.rules?.["camelcase"]).toEqual("error");
+	// Verify that ESLint's "dot-notation" rule is undefined because enabling it
+	// conflicts with Typescript's "noPropertyAccessFromIndexSignature" rule.
+	expect(eslintConfig.rules?.["dot-notation"]).toBeUndefined();
 	expect(eslintConfig.rules?.["no-console"]).toEqual("warn");
 	expect(eslintConfig.rules?.["no-magic-numbers"]).toStrictEqual([
 		"error",

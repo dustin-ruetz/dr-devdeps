@@ -11,25 +11,25 @@ export const dependsOn = async (deps: string[]) => {
 	// so start with some manual typechecking and throw errors early if needed.
 	if (!Array.isArray(deps) || deps.length === 0) {
 		throw new ValidationError(
-			"Argument for the `deps` parameter must be an array of strings with a length >= 1. Received:" +
-				"\n" +
-				`- typeof deps = ${typeof deps}` +
-				"\n" +
-				`- deps = ${deps}`,
-			{cause: {code: "ERR_INVALID_DEPS_ARRAY"}},
+			"Argument for the `deps` parameter must be an array of strings with a length >= 1.",
+			{
+				cause: {
+					code: "ERR_INVALID_DEPS_ARRAY",
+					values: {deps, "typeof deps": typeof deps},
+				},
+			},
 		);
 	}
 	deps.forEach((dep) => {
 		if (typeof dep !== "string") {
 			throw new ValidationError(
-				"All values in the `deps` array must be strings. Received:" +
-					"\n" +
-					`- deps = ${deps}` +
-					"\n" +
-					`- typeof dep = ${typeof dep}` +
-					"\n" +
-					`- dep = ${dep}`,
-				{cause: {code: "ERR_DEP_TYPE_NOT_STRING"}},
+				"All values in the `deps` array argument must be strings.",
+				{
+					cause: {
+						code: "ERR_TYPEOF_DEP_NOT_STRING",
+						values: {deps, dep, "typeof dep": typeof dep},
+					},
+				},
 			);
 		}
 	});
