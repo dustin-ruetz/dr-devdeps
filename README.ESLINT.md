@@ -9,11 +9,7 @@
 ```sh
 npm uninstall --save @typescript-eslint/eslint-plugin @typescript-eslint/parser
 
-npm install --save --save-exact @eslint/js@9.0.0-beta.1 @types/eslint__js eslint@9.0.0-beta.1 globals
-
-# Note: The following package as of v7.0.2 does not currently support ESLint v9, so just skip installation for now.
-# https://github.com/typescript-eslint/typescript-eslint/blob/main/package.json
-npm install --save --save-exact typescript-eslint
+npm install --save --save-exact @eslint/js@ @types/eslint__js eslint@9 globals typescript-eslint
 ```
 
 2. Update `build` scripts.
@@ -29,22 +25,21 @@ npm install --save --save-exact typescript-eslint
 
 ```json
 "// lint": "Scripts for linting the codebase.",
-"lint": "DELETE",
-"lint:check": "eslint ./",
-"lint:fix": "eslint --fix ./",
+"lint": "eslint --config ./lib/eslint.config.js",
+"lint:check": "npm run lint -- ./",
+"lint:fix": "npm run lint -- --fix ./",
 ```
 
 4. Remove `eslintConfig` key.
 
+## Changes to `.vscode/settings.json` file
+
 ```json
-"// config": "Configuration for Prettier.",
-"prettier": "./lib/prettier.config.js"
-```
-
-## Create root `eslint.config.js` file
-
-```js
-export {default} from "./lib/eslint.config.js";
+// https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+"eslint.options": {
+	"ignore": ".gitignore",
+	"overrideConfigFile": "lib/eslint.config.js"
+}
 ```
 
 ## Changes to `tsconfig` files
@@ -54,7 +49,7 @@ export {default} from "./lib/eslint.config.js";
 ```json
 {
 	"extends": "./tsconfig.json",
-	"exclude": ["**/__tests__/**"]
+	"exclude": ["**/*.mock.*", "**/*.test.*"]
 }
 ```
 
@@ -63,13 +58,13 @@ export {default} from "./lib/eslint.config.js";
 ## Update `lint-staged.config.ts` file
 
 ```ts
-`eslint --fix ${relativePaths.join(" ")}`;
+`npm run lint -- --fix ${relativePaths.join(" ")}`,
 ```
 
 ## Delete `postbuild` files
 
-1. `src/__tests__/postbuild.test.js`
-1. `src/postbuild.js`
+1. `scripts/postbuild.test.js`
+1. `scripts/postbuild.js`
 
 ## Update `eslint.config.ts` file
 
