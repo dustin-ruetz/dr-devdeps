@@ -1,6 +1,6 @@
 # Upgrading ESLint from v8 to v9
 
-**Important:** Wait ~2-4 weeks before upgrading ESLint-and-friends to v9 to ensure that issues with peer dependencies are resolved.
+**Important:** Wait until `typescript-eslint` supports ESLint v9 before trying to upgrade.
 
 ## Changes to `package.json` file
 
